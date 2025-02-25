@@ -1,4 +1,10 @@
 from actor import Actor
 
 class SourceActor(Actor):
-    pass
+    def __init__(self, ip, name, port, intf, intfrole, country, action, mac, mastermac, server):
+        super().__init__(ip, name, port, intf, intfrole, country, action)
+        self.mac = mac
+        self.mastermac = mastermac
+        self.server = server
+
+
