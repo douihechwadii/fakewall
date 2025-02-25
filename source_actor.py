@@ -8,3 +8,10 @@ class SourceActor(Actor):
         self.server = server
 
 
+    def start(self, action):
+        return super().start(action)
+    
+    def stop(self, action):
+        return super().stop(action)
+
+
