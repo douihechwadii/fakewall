@@ -20,18 +20,6 @@ class Actor:
 
     def intf_init(self):
         self.intf = "port" + random(1,99)
-
-    # for the source
-    def start(self, action):
-        pass
-
-    def stop(self, action):
-        pass
-
-    # for the destination
-    def accept(self, action):
-        pass
-
-    def refuse(self, action):
-        pass
     
+    def __str__(self):
+        return f"Actor: {self.ip}, {self.name}, {self.port}, {self.intf}, {self.intfrole}, {self.country}"
