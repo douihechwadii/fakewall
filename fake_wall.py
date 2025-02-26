@@ -6,22 +6,32 @@ current_date = datetime.now().date()
 current_time = datetime.now().time().strftime("%H:%M:%S")
 
 # Type and Subtype
+types = ["traffic", "event", "utm"]
+random_type = random.choice(types)
+
 traffic_subtypes = ["forward", "http-transaction", "local", "multicast", "sniffer", "ztna"]
 random_traffic_subtype = random.choice(traffic_subtypes)
 
 event_subtypes = ["cifs-auth-fail", "connector", "endpoint", "fortiextender", "ha", "rest-api", "router"]
 random_event_subtype = random.choice(event_subtypes)
 
-utm_subtypes = ["virus", "webfilter", "ips", "emailfilter", "anomaly", "voip", "dlp", "app-ctrl", "waf", "gtp", "dns", "ssh", "ssl", "file-filter", "icap", "forti-switch", "virtual-patch", "casb"]
+utm_subtypes = ["virus", "webfilter", "ips", "emailfilter", "anomaly", "voip", "dlp", "app-ctrl", "waf",
+                 "gtp", "dns", "ssh", "ssl", "file-filter", "icap", "forti-switch", "virtual-patch", "casb"]
 random_utm_subtype = random.choice(utm_subtypes)
 
+if random_type == "traffic":
+    random_subtype = random_traffic_subtype
+elif random_type == "event":
+    random_subtype = random_event_subtype
+else:
+    random_subtype = random_utm_subtype
 
 log_entry = (
     f"date={current_date} "
     f"time={current_time} "
     "logid=\"0000000013\" "
-    "type=\"utm\" "
-    f"subtype=\"{random_utm_subtype}\" "
+    f"type=\"{random_type}\" "
+    f"subtype=\"{random_subtype}\" "
     "level=\"notice\" "
     "vd=\"vdom1\" "
     "eventtime=1510775056 "
