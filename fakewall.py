@@ -4,6 +4,7 @@ import random
 # Date and Time
 current_date = datetime.now().date()
 current_time = datetime.now().time().strftime("%H:%M:%S")
+eventtime = int(datetime.timestamp(datetime.now()))
 
 # Type and Subtype
 types = ["traffic", "event", "utm"]
@@ -35,7 +36,7 @@ log_entry = (
     f"subtype=\"{random_subtype}\" "
     "level=\"notice\" "
     "vd=\"vdom1\" "
-    "eventtime=1510775056 "
+    f"eventtime={eventtime} "
     "srcip=10.1.100.155 "
     "srcname=\"pc1\" "
     "srcport=40772 "
