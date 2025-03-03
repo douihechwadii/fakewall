@@ -1,0 +1,10 @@
+{
+    "scenario": "DDoS Attack",
+    "duration_seconds": 60,
+    "log_type": "traffic",
+    "src_ips": ["192.168.1.10", "10.0.0.5", "172.16.0.3"],
+    "dst_ips": ["203.0.113.45"],
+    "services": ["HTTP", "HTTPS"],
+    "actions": ["accept", "drop"],
+    "interval_seconds": 1
+}
