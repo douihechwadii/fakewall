@@ -1,6 +1,6 @@
 # **Scenario Design Guidelines for Log Entry Generation**
 
-This README provides guidelines for designing scenarios and generating log entries that mimic real-world traffic patterns in FortiGate firewalls. It covers attributes that must change or remain constant based on the scenario type, source/destination details, and other factors.
+This document provides guidelines for designing scenarios and generating log entries that mimic real-world traffic patterns in FortiGate firewalls. It covers attributes that must change, remain constant, and those that can be ignored based on the scenario type, source/destination details, and other factors.
 
 ---
 
@@ -158,34 +158,71 @@ This README provides guidelines for designing scenarios and generating log entri
 
 ---
 
-## **10. Scenario-Specific Considerations**
+## **10. Attributes That Can Be Ignored in Certain Scenarios**
 
-### **10.1 DDoS Attack**
-- Generate a large number of log entries with varying `srcip` but the same `dstip`.
-- Use high byte counts and short durations to simulate high traffic volume.
+### **10.1 NAT-Related Fields**
+- **Ignore if no NAT is involved**:
+  - `trandisp`, `transip`, `transport`.
 
-### **10.2 Malware Download**
-- Include UTM-related fields (`utmaction`, `url`) to indicate blocked or allowed downloads.
-- Use specific `app` and `appcat` values (e.g., `Malware.Download`).
+### **10.2 Application Inspection Fields**
+- **Ignore if application inspection is disabled**:
+  - `appid`, `app`, `appcat`, `apprisk`.
 
-### **10.3 Brute Force Attack**
-- Generate repeated login attempts with different `srcip` and `dstport`.
-- Use `utmaction="block"` for failed attempts.
+### **10.3 UTM-Related Fields**
+- **Ignore if UTM features are not used**:
+  - `utmaction`, `countapp`, `devtype`, `osname`, `utmref`.
+
+### **10.4 MAC Address Fields**
+- **Ignore if MAC logging is disabled**:
+  - `mastersrcmac`, `srcmac`.
+
+### **10.5 Interface Role Fields**
+- **Ignore if interface roles are not explicitly defined**:
+  - `srcintfrole`, `dstintfrole`.
+
+### **10.6 Packet Count Fields**
+- **Ignore if packet counts are not required**:
+  - `sentpkt`, `rcvdpkt`.
+
+### **10.7 Additional Optional Fields**
+- **Ignore if not relevant to the scenario**:
+  - `srcname`, `dstname`, `srcserver`.
 
 ---
 
-## **11. Example Scenarios**
+## **11. Scenario-Specific Considerations**
 
-### **11.1 Outbound Traffic**
+### **11.1 DDoS Attack**
+- Generate a large number of log entries with varying `srcip` but the same `dstip`.
+- Use high byte counts and short durations to simulate high traffic volume.
+- **Optional Fields**: Ignore `appid`, `app`, `appcat`, `apprisk` unless application-specific details are needed.
+
+### **11.2 Malware Download**
+- Include UTM-related fields (`utmaction`, `url`) to indicate blocked or allowed downloads.
+- Use specific `app` and `appcat` values (e.g., `Malware.Download`).
+- **Optional Fields**: Ignore `sentpkt`, `rcvdpkt` if packet counts are not critical.
+
+### **11.3 Brute Force Attack**
+- Generate repeated login attempts with different `srcip` and `dstport`.
+- Use `utmaction="block"` for failed attempts.
+- **Optional Fields**: Ignore `appid`, `app`, `appcat`, `apprisk` unless application-specific details are needed.
+
+---
+
+## **12. Example Scenarios**
+
+### **12.1 Outbound Traffic**
 - **Source**: Internal (`srcip=192.168.1.10`, `srcintf=internal`).
 - **Destination**: External (`dstip=203.0.113.45`, `dstintf=wan1`).
 - **Attributes**: Include `trandisp=snat`, `transip=public_ip`.
+- **Optional Fields**: Ignore `appid`, `app`, `appcat`, `apprisk` if application inspection is disabled.
 
-### **11.2 Inbound Traffic**
+### **12.2 Inbound Traffic**
 - **Source**: External (`srcip=203.0.113.45`, `srcintf=wan1`).
 - **Destination**: Internal (`dstip=192.168.1.10`, `dstintf=internal`).
 - **Attributes**: Include `trandisp=dnat`, `transip=private_ip`.
+- **Optional Fields**: Ignore `utmaction`, `countapp`, `devtype`, `osname` if UTM is not involved.
 
 ---
 
-By following these guidelines, you can create realistic and consistent scenarios for generating log entries that closely resemble those produced by a FortiGate firewall. Adjust the attributes as needed to fit the specific requirements of each scenario.
+By following these guidelines, you can create realistic and consistent scenarios for generating log entries that closely resemble those produced by a FortiGate firewall. Adjust the attributes as needed to fit the specific requirements of each scenario, and feel free to omit optional fields when they are not relevant.
