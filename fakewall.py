@@ -21,22 +21,71 @@ def generate_log_entry(scenario, timestamp):
     sent_bytes = random.randint(100, 10000)
     received_bytes = random.randint(100, 10000)
     duration = random.randint(1, 10)
-
+    
+    # Source and Destination Country code
+    if "srccountry" in scenario and "dstcountry" in scenario:
+        srccountry = random.choice(scenario["srccountry"])
+        dstcountry = random.choice(scenario["dstcountry"])
+    else:
+        if "10." in src_ip or "172.16" in src_ip or "172.31" in src_ip or "192.168." in src_ip:
+            srccountry = "Reserved"
+            dstcountry = "United State"
+        else:
+            dstcountry = "Reserved"
+            srccountry = "Tunisia"
+    
+    # Type and Subtype code
+    if "type" in scenario and "subtype" in scenario:
+        type = scenario["type"]
+        subtype = scenario["subtype"]
+    else:
+        types = ["traffic", "event", "utm"]
+        type = random.choice(types)
+        
+        traffic_subtypes = ["forward", "http-transaction", "local", "multicast", "sniffer", "ztna"]
+        random_traffic_subtype = random.choice(traffic_subtypes)
+        
+        event_subtypes = ["cifs-auth-fail", "connector", "endpoint", "fortiextender", "ha", "rest-api", "router"]
+        random_event_subtype = random.choice(event_subtypes)
+        
+        utm_subtypes = ["virus", "webfilter", "ips", "emailfilter", "anomaly", "voip", "dlp", "app-ctrl", "waf",
+                 "gtp", "dns", "ssh", "ssl", "file-filter", "icap", "forti-switch", "virtual-patch", "casb"]
+        random_utm_subtype = random.choice(utm_subtypes)
+        
+        if type == "traffic":
+            subtype = random_traffic_subtype
+        elif type == "event":
+            subtype = random_event_subtype
+        else:
+            subtype = random_utm_subtype
+    
+    # srcintf and dstintf code
+    if "srcintf" in scenario and "dstintf" in scenario:
+        srcintf = random.choice(scenario["srcintf"])
+        dstintf = random.choice(scenario["dstintf"])
+    else:
+        if srccountry == "Reserved":
+            srcintf = "wlan1"
+            dstintf = "internal"
+        else:
+            srcintf = "internal"
+            dstintf = "wlan1"    
+    
     # Start building the log entry with mandatory fields
     log_entry = (
         f"date={timestamp.strftime('%Y-%m-%d')} "
         f"time={timestamp.strftime('%H:%M:%S')} "
         f"logid=\"0000000013\" "
-        f"type=\"traffic\" subtype=\"forward\" level=\"notice\" vd=\"vdom1\" "
+        f"type=\"{type}\" subtype=\"{subtype}\" level=\"{scenario["level"]}\" vd=\"vdom1\" "
         f"eventtime={int(timestamp.timestamp())} "
         f"srcip={src_ip} dstip={dst_ip} "
         f"srcport={src_port} dstport={dst_port} "
-        f"srcintf=\"internal\" dstintf=\"external\" "
+        f"srcintf=\"{srcintf}\" dstintf=\"{dstintf}\" "
         f"proto=6 action=\"{action}\" service=\"{service}\" "
         f"sentbyte={sent_bytes} rcvdbyte={received_bytes} "
         f"duration={duration} "
-        f"policyid=1 policymode=\"normal\" "
-        f"srccountry=\"Reserved\" dstcountry=\"United States\""
+        f"policyid=1 policymode=\"{scenario["policymode"]}\" "
+        f"srccountry=\"{srccountry}\" dstcountry=\"{dstcountry}\""
     )
 
     # Dynamically add optional attributes if they exist in the scenario file
@@ -90,6 +139,7 @@ def generate_logs(scenario, output_file):
             file.write(log_entry + "\n")
             current_time += timedelta(seconds=interval)
 
+#! Doesn't need to be changed 
 if __name__ == "__main__":
     # command-line argument parsing setup
     parser = argparse.ArgumentParser(description="Generate FortiGate log entries based on a scenario file.")
