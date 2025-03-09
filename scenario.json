@@ -6,5 +6,7 @@
     "dst_ips": ["203.0.113.45"],
     "services": ["HTTP", "HTTPS"],
     "actions": ["accept", "drop"],
-    "interval_seconds": 1
+    "interval_seconds": 1,
+    "level": "notice",
+    "policymode": "0"
 }
