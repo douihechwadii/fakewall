@@ -21,6 +21,8 @@ def generate_log_entry(scenario, timestamp):
     sent_bytes = random.randint(100, 10000)
     received_bytes = random.randint(100, 10000)
     duration = random.randint(1, 10)
+    sentpkt = random.randint(1, 30)
+    rcvdpkt = random.randint(1, 30)
     
     # Source and Destination Country code
     if "srccountry" in scenario and "dstcountry" in scenario:
@@ -35,13 +37,16 @@ def generate_log_entry(scenario, timestamp):
             srccountry = "Tunisia"
     
     # Type and Subtype code
-    if "type" in scenario and "subtype" in scenario:
+    if "type" in scenario:
         type = scenario["type"]
-        subtype = scenario["subtype"]
     else:
         types = ["traffic", "event", "utm"]
         type = random.choice(types)
         
+    
+    if "subtype" in scenario:
+        subtype = scenario["subtype"]
+    else:
         traffic_subtypes = ["forward", "http-transaction", "local", "multicast", "sniffer", "ztna"]
         random_traffic_subtype = random.choice(traffic_subtypes)
         
@@ -58,6 +63,7 @@ def generate_log_entry(scenario, timestamp):
             subtype = random_event_subtype
         else:
             subtype = random_utm_subtype
+        
     
     # srcintf and dstintf code
     if "srcintf" in scenario and "dstintf" in scenario:
@@ -86,6 +92,7 @@ def generate_log_entry(scenario, timestamp):
         f"duration={duration} "
         f"policyid=1 policymode=\"{scenario["policymode"]}\" "
         f"srccountry=\"{srccountry}\" dstcountry=\"{dstcountry}\""
+        f"sentpkt=\"{sentpkt}\" rcvdpkt=\"{rcvdpkt}\""
     )
 
     # Dynamically add optional attributes if they exist in the scenario file
@@ -111,9 +118,7 @@ def generate_log_entry(scenario, timestamp):
         ("srcname", "srcname"),
         ("dstname", "dstname"),
         ("srcintfrole", "srcintfrole"),
-        ("dstintfrole", "dstintfrole"),
-        ("sentpkt", "sentpkt"),
-        ("rcvdpkt", "rcvdpkt")
+        ("dstintfrole", "dstintfrole")
     ]
 
     for field_name, key in optional_fields:
