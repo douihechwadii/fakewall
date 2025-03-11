@@ -75,7 +75,10 @@ def generate_log_entry(scenario, timestamp):
             dstintf = "internal"
         else:
             srcintf = "internal"
-            dstintf = "wlan1"    
+            dstintf = "wlan1"
+            
+    # srcmac and mastersrcmac
+    random_mac = ":".join(f"{random.randint(0, 255):02x}" for _ in range(6))    
     
     # Start building the log entry with mandatory fields
     log_entry = (
@@ -93,6 +96,8 @@ def generate_log_entry(scenario, timestamp):
         f"policyid=1 policymode=\"{scenario["policymode"]}\" "
         f"srccountry=\"{srccountry}\" dstcountry=\"{dstcountry}\""
         f"sentpkt=\"{sentpkt}\" rcvdpkt=\"{rcvdpkt}\""
+        f"devtype=\"Linux PC\" osname=\"Linux\""
+        f"mastersrcmac=\"{random_mac}\" srcmac=\"{random_mac}\""
     )
 
     # Dynamically add optional attributes if they exist in the scenario file
@@ -109,10 +114,6 @@ def generate_log_entry(scenario, timestamp):
         ("apprisk", "apprisk"),
         ("utmaction", "utmaction"),
         ("countapp", "countapp"),
-        ("devtype", "devtype"),
-        ("osname", "osname"),
-        ("mastersrcmac", "mastersrcmac"),
-        ("srcmac", "srcmac"),
         ("srcserver", "srcserver"),
         ("utmref", "utmref"),
         ("srcname", "srcname"),
