@@ -8,5 +8,7 @@
     "actions": ["accept", "drop"],
     "interval_seconds": 1,
     "level": "notice",
-    "policymode": "0"
+    "policymode": "0",
+    "utmaction": ["allow", "block"],
+    "countapp": 1
 }

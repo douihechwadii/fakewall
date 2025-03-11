@@ -14,6 +14,7 @@ def generate_log_entry(scenario, timestamp):
     dst_ip = random.choice(scenario['dst_ips'])
     service = random.choice(scenario['services'])
     action = random.choice(scenario['actions'])
+    utmaction = random.choice(scenario['utmaction'])
 
     # Randomize other fields
     src_port = random.randint(1024, 65535)
@@ -90,6 +91,7 @@ def generate_log_entry(scenario, timestamp):
         f"srcip={src_ip} dstip={dst_ip} "
         f"srcport={src_port} dstport={dst_port} "
         f"srcintf=\"{srcintf}\" dstintf=\"{dstintf}\" "
+        f"srcintfrole=\"undefined\" dstintfrole=\"undefined\""
         f"proto=6 action=\"{action}\" service=\"{service}\" "
         f"sentbyte={sent_bytes} rcvdbyte={received_bytes} "
         f"duration={duration} "
@@ -98,6 +100,7 @@ def generate_log_entry(scenario, timestamp):
         f"sentpkt=\"{sentpkt}\" rcvdpkt=\"{rcvdpkt}\""
         f"devtype=\"Linux PC\" osname=\"Linux\""
         f"mastersrcmac=\"{random_mac}\" srcmac=\"{random_mac}\""
+        f"utmaction=\"{utmaction}\" countapp=\"{scenario["countapp"]}\""
     )
 
     # Dynamically add optional attributes if they exist in the scenario file
@@ -112,14 +115,10 @@ def generate_log_entry(scenario, timestamp):
         ("app", "app"),
         ("appcat", "appcat"),
         ("apprisk", "apprisk"),
-        ("utmaction", "utmaction"),
-        ("countapp", "countapp"),
         ("srcserver", "srcserver"),
         ("utmref", "utmref"),
         ("srcname", "srcname"),
         ("dstname", "dstname"),
-        ("srcintfrole", "srcintfrole"),
-        ("dstintfrole", "dstintfrole")
     ]
 
     for field_name, key in optional_fields:
