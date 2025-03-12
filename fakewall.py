@@ -24,6 +24,9 @@ def generate_log_entry(scenario, timestamp):
     duration = random.randint(1, 10)
     sentpkt = random.randint(1, 30)
     rcvdpkt = random.randint(1, 30)
+    sessionid = random.randint(1000, 9999)
+    appid = random.randint(10000, 99999)
+    transport = random.randint(10000, 99999)
     
     # Source and Destination Country code
     if "srccountry" in scenario and "dstcountry" in scenario:
@@ -101,21 +104,18 @@ def generate_log_entry(scenario, timestamp):
         f"devtype=\"Linux PC\" osname=\"Linux\""
         f"mastersrcmac=\"{random_mac}\" srcmac=\"{random_mac}\""
         f"utmaction=\"{utmaction}\" countapp=\"{scenario["countapp"]}\""
+        f"srcserver=0 sessionid=\"{sessionid}\" appid=\"{appid}\""
+        f"apprisk=\"{scenario["apprisk"]}\" transport=\"{transport}\""
     )
 
     # Dynamically add optional attributes if they exist in the scenario file
     optional_fields = [
         ("poluuid", "poluuid"),
-        ("sessionid", "sessionid"),
         ("policytype", "policytype"),
         ("trandisp", "trandisp"),
         ("transip", "transip"),
-        ("transport", "transport"),
-        ("appid", "appid"),
         ("app", "app"),
         ("appcat", "appcat"),
-        ("apprisk", "apprisk"),
-        ("srcserver", "srcserver"),
         ("utmref", "utmref"),
         ("srcname", "srcname"),
         ("dstname", "dstname"),

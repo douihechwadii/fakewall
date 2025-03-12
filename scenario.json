@@ -10,5 +10,6 @@
     "level": "notice",
     "policymode": "0",
     "utmaction": ["allow", "block"],
-    "countapp": 1
+    "countapp": 1,
+    "apprisk": "medium"
 }
