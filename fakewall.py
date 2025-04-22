@@ -1,4 +1,5 @@
 import json
+import time
 import random
 from datetime import datetime, timedelta
 import argparse # for adding the scenario as an argument to the script
@@ -132,17 +133,18 @@ def generate_log_entry(scenario, timestamp):
     
     
 def generate_logs(scenario, output_file):
-    """Generate log entries for the given scenario and write them to a file."""
-    start_time = datetime.now()
-    end_time = start_time + timedelta(seconds=scenario['duration_seconds'])
+    """Continuously generate log entries for the given scenario and append to a file."""
     interval = scenario['interval_seconds']
-    
-    with open(output_file, 'w') as file:
-        current_time = start_time
-        while current_time <= end_time:
+
+    with open(output_file, 'a') as file:
+        while True:
+            current_time = datetime.now()
             log_entry = generate_log_entry(scenario, current_time)
             file.write(log_entry + "\n")
-            current_time += timedelta(seconds=interval)
+            file.flush()  # Ensure it's written immediately
+            print(f"[LOG] {log_entry}")
+            time.sleep(interval)
+
 
 #! Doesn't need to be changed 
 if __name__ == "__main__":
